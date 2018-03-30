@@ -12,5 +12,5 @@ rl.question('Who are U?\n\n', (answer) => {
     
     console.log(`\nHello, ${answer}\nthank U for help me ^___^\n`);
     
-rl.close();
+    rl.close();
     });
