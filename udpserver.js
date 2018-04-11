@@ -1,3 +1,4 @@
+//создание сервера
 const dgram = require('dgram');
 const server = dgram.createSocket('udp4');
 
@@ -11,9 +12,12 @@ function splitString(stringToSplit, separator) {
     console.log('\nСтрока от юзера: "' + stringToSplit + '"');
     console.log('Разделитель: "' + separator + '"');
     console.log('Всего  ' + arrayOfStrings.length + ' параметра: ' + arrayOfStrings.join(' / '));
+    
+    //создание команды
     var Action = {
         COMMAND: 'push'
     }
+    //создание объекта юзера
     var usr = {
         USER_ID: arrayOfStrings[0],
         COMMAND: arrayOfStrings[1],
@@ -21,6 +25,7 @@ function splitString(stringToSplit, separator) {
         ARG2: arrayOfStrings[3]
     }
     
+    //условие вывода на экран от команды
     if (Action.COMMAND == usr.COMMAND) {
     console.log('\nВаше имя ' + usr.USER_ID + ' Ваши координаты ' + usr.ARG1 + ' ' + usr.ARG2);
 
