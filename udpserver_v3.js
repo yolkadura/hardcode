@@ -38,7 +38,7 @@ function splitString(stringToSplit, separator) {
         y: arrayOfStrings[3]
     }
 
-    return usr;
+    return usr; //возвращение данных наружу
 };
 
 //создание событий сервера
