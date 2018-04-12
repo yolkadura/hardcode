@@ -17,6 +17,16 @@ var push = {
     ARG2: '',
     map
 }
+//переменная для перехвата мапа
+var info = undefined;
+//переменная для вычисления расстояния или типа того
+var length = undefined;
+var bez = {
+    x: undefined,
+    y: undefined,
+    z: undefined
+};
+
 //создание мапы для базы юзеров
 var map = new Map();
 //функция на добавление новых юзеров
@@ -35,7 +45,8 @@ function splitString(stringToSplit, separator) {
     //создание команды
     var Action = {
         COMMAND1: 'push',
-        COMMAND2: 'pop'
+        COMMAND2: 'pop',
+        COMMAND3: 'len'
     }
     //создание объекта юзера
     var usr = {
@@ -53,19 +64,34 @@ function splitString(stringToSplit, separator) {
         push.ARG1 = usr.ARG1;
         push.ARG2 = usr.ARG2;
         push.user = usr.USER_ID;
-        push.map = `x: ${usr.ARG1} y: ${usr.ARG2}`; //свойство для мапы чтоб в значении было 2 объекта
-
+       // push.map = `x: ${usr.ARG1} y: ${usr.ARG2}`; //свойство для мапы чтоб в значении было 2 объекта
+        push.map = {
+            x: usr.ARG1.trim(),
+            y: usr.ARG2.trim()
+        };
 
         addUserToList(usr.USER_ID, push.map); //вызов функции добавления юзера
 
-    console.log('\nВаше имя ' + usr.USER_ID + ' Ваши координаты ' + usr.ARG1 + ' ' + usr.ARG2);
+        console.log('\nВаше имя ' + usr.USER_ID + ' Ваши координаты ' + usr.ARG1 + ' ' + usr.ARG2);
 
     } else if (Action.COMMAND2 == (usr.COMMAND.trim()))  { //трим нужен для удаления всяких пробелов
         //server.send(msgc, portc, addressc);
         //server.send(`Ваши координаты X: ${push.ARG1} Y: ${push.ARG2}`, portc, addressc);
-        server.send('Ваши координаты ' + map.get(usr.USER_ID), portc, addressc); //вывод юзеру данных из мапы
-        console.log(map.get(usr.USER_ID));
+        //server.send('Ваши координаты ' + map.get(usr.USER_ID), portc, addressc); 
         
+        info = map.get(usr.USER_ID); //вывод данных из мапы
+        server.send(`Ваши координаты X:${info.x} Y:${info.y}\n`, portc, addressc);
+        //console.log(`Ваши координаты X:${info.x} Y:${info.y}`);
+        
+    } else if (Action.COMMAND3 == (usr.COMMAND.trim())) {
+        
+        info = map.get(usr.USER_ID); //вывод данных из мапы
+        bez.x = usr.ARG1 - info.x;
+        bez.y = usr.ARG2 - info.y;
+        bez.z = bez.x + bez.y;
+        length = Math.sqrt(bez.z);
+        server.send(`Расстояние: ${length}\n`, portc, addressc);
+        console.log(length);
     }
     
     else {
