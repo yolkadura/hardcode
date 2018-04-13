@@ -25,7 +25,7 @@ function addUserToList(key, value) {
 function splitString(stringToSplit, separator) {
     var arrayOfStrings = stringToSplit.split(separator);
     
-    console.log('\nСтрока от юзера: "' + stringToSplit + '"');
+    console.log('\nСтрока от юзера: "' + stringToSplit.trim() + '"');
     console.log('Разделитель: "' + separator + '"');
     console.log('Всего  ' + arrayOfStrings.length + ' параметра: ' + arrayOfStrings.join(' / '));
     
@@ -50,64 +50,52 @@ server.on('error', (err) => {
   
 server.on('message', (msg, rinfo) => {
     console.log(`Сервер получил: ${msg} От ${rinfo.address}:${rinfo.port}`);
-    var splitmsg = msg.toString('ascii');
-    //сохранение во временные объекты
-    var time = {
-        msg: `Ответ: ${msg}`,
-        adr: rinfo.address,
-        port: rinfo.port
-    };
+    var splitmsg = msg.toString('ascii'); //перевод сообщения в строку стринг для нарезки. потому что изначально она буффер
+        
     //объект для вывода юзеру
     var usr = splitString(splitmsg, dot);
     var pushmap;
         
-
-    
-
     //условие вывода на экран от команды
     if (usr.com == com.push) {
 
             
         //свойство для мапы чтоб в значении было 2 объекта
         pushmap = {
-            x: usr.x.trim(),
+            x: usr.x.trim(), //трим нужен для удаления всяких пробелов
             y: usr.y.trim()
         };
 
         addUserToList(usr.id, pushmap); //вызов функции добавления юзера
 
-        console.log('\nВаше имя ' + usr.id + ' Ваши координаты ' + usr.x + ' ' + usr.y);
+        console.log('\nИмя пользователя ' + usr.id + ' и его координаты ' + usr.x + ' ' + usr.y);
 
     } else if ((usr.com.trim()) == com.pop)  { //трим нужен для удаления всяких пробелов
         
         info = map.get(usr.id); //передача данных из мапы в объект инфо
 
             if (info == undefined) { 
-                server.send(`Пользователя ${usr.id} не существует`, time.port, time.adr)} 
+                server.send(`Пользователя ${usr.id} не существует`, rinfo.port, rinfo.address)} 
             else {
-                server.send(`Ваши координаты X:${info.x} Y:${info.y}\n`, time.port, time.adr)}
+                server.send(`Ваши координаты X:${info.x} Y:${info.y}\n`, rinfo.port, rinfo.address)}
      
         
     } else if ((usr.com.trim()) == com.len) {
         
-
-    //переменная для вычисления расстояния или типа того
+        //переменная для вычисления расстояния или типа того
         var length = undefined;
-        var bez = {
-            x: undefined,
-            y: undefined,
-            z: undefined
-        };
-
+        
         info = map.get(usr.id); //вывод данных из мапы
-        bez.x = usr.x - info.x;
-        bez.y = usr.y - info.y;
-        bez.z = bez.x + bez.y;
-        length = Math.sqrt(bez.z);
-        server.send(`Расстояние: ${length}\n`, time.port, time.adr);
+       
+        length = Math.sqrt(Math.pow((usr.x - info.x), 2) + Math.pow((usr.y - info.y), 2)); //формула расстояния по координатам из гугла
+
+        server.send(`Расстояние: ${length}\n`, rinfo.port, rinfo.address);
         console.log(length);
+
     } else {
-    console.log('\nwrong command')
+
+        server.send('Неверная команда\n', rinfo.port, rinfo.address)
+        console.log('\nНеверная команда')
     };
    
 });
