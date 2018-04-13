@@ -1,3 +1,6 @@
+'use strict'; // этот код будет работать по современному стандарту ES5
+
+
 //создание сервера
 const dgram = require('dgram');
 const server = dgram.createSocket('udp4');
@@ -75,7 +78,7 @@ server.on('message', (msg, rinfo) => {
         info = map.get(usr.id); //передача данных из мапы в объект инфо
 
             if (info == undefined) { 
-                server.send(`Пользователя ${usr.id} не существует`, rinfo.port, rinfo.address)} 
+                server.send(`Пользователя ${usr.id} не существует\n`, rinfo.port, rinfo.address)} 
             else {
                 server.send(`Ваши координаты X:${info.x} Y:${info.y}\n`, rinfo.port, rinfo.address)}
      
@@ -85,7 +88,7 @@ server.on('message', (msg, rinfo) => {
         //переменная для вычисления расстояния или типа того
         var length = undefined;
         
-        info = map.get(usr.id); //вывод данных из мапы
+        var info = map.get(usr.id); //вывод данных из мапы
        
         length = Math.sqrt(Math.pow((usr.x - info.x), 2) + Math.pow((usr.y - info.y), 2)); //формула расстояния по координатам из гугла
 
