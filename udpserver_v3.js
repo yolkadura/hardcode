@@ -75,7 +75,7 @@ server.on('message', (msg, rinfo) => {
 
     } else if ((usr.com.trim()) == com.pop)  { //трим нужен для удаления всяких пробелов
         
-        info = map.get(usr.id); //передача данных из мапы в объект инфо
+        var info = map.get(usr.id); //передача данных из мапы в объект инфо
 
             if (info == undefined) { 
                 server.send(`Пользователя ${usr.id} не существует\n`, rinfo.port, rinfo.address)} 
