@@ -53,7 +53,6 @@ var pushmap;
 //условие вывода на экран от команды
 if (usr.com == com.push) {
 
-        
     //свойство для мапы чтоб в значении было 2 объекта
     pushmap = {
         x: usr.x.trim(), //трим нужен для удаления всяких пробелов
@@ -103,8 +102,7 @@ server.on('message', (msg, rinfo) => {
     console.log(`Сервер получил: ${msg} От ${rinfo.address}:${rinfo.port}`);
     
     whatCommand(msg,rinfo);    
-    
-   
+       
 });
   
 server.on('listening', () => {
