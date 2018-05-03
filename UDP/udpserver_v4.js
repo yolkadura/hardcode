@@ -3,6 +3,7 @@
 
 //создание сервера
 const dgram = require('dgram');
+const err = require('mod_error');
 const server = dgram.createSocket('udp4');
 
 
@@ -87,8 +88,9 @@ if (usr.com == com.push) {
 
 } else {
 
-    server.send('Неверная команда\n', rinfo.port, rinfo.address)
-    console.log('\nНеверная команда')
+    server.send('Неверная команда\n', rinfo.port, rinfo.address);
+    //console.log('\nНеверная команда');
+    console.log(err.log);
 }};
 
 //создание событий сервера

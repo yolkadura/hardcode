@@ -5,7 +5,7 @@ var ctx = document.getElementById("ctx").getContext("2d");
 
 //модификации =
 ctx.font = '30px Arial';
-//ctx.fillStyle = 'red';
+//ctx.fillStyle = 'red'; //цвет
 //ctx.globalAlpha = 0.5;
 //рисование ()
 //ctx.fillText('Hello',x,y); //надпись
@@ -14,31 +14,76 @@ ctx.font = '30px Arial';
 
 var HEIGHT = 500;
 var WIDTH = 500;
-var message = 'bowbow'
+var timeWhenGameStarted = Date.now(); //ретурн тайм ин мс
 
 var player = {
     name: 'O',
     x: 50,
     spdX: 30,
     y: 40,
-    spdY: 5
+    spdY: 5,
+    hp: 10,
+    width: 20,
+    height: 20,
+    color: 'green',
 };
 
-var enemy = {
-    name: 'W',
-    x: 150,
-    spdX: 10,
-    y: 350,
-    spdY: 15
-};
+var enemyList = {};
 
-setInterval(update,50);
+function getDistanceBetweenEntity(entity1,entity2){ //дистанция
+    return Math.sqrt(Math.pow((entity1.x - entity2.x),2)+Math.pow((entity1.y - entity2.y),2));
+}
+
+function testCollisionEntity(entity1,entity2){ //возвращает правду или ложь
+    var rect1 = {
+        x: entity1.x - entity1.width/2,
+        y: entity1.y - entity1.height/2,
+        width: entity1.width,
+        height: entity1.height,
+    }
+    var rect2 = {
+        x: entity2.x - entity2.width/2,
+        y: entity2.y - entity2.height/2,
+        width: entity2.width,
+        height: entity2.height,
+    }
+    return testCollisionRectRect(rect1,rect2);
+}
+
+function Enemy(id,x,y,spdX,spdY,width,height){
+    var enemy3 = {
+        name: 'X',
+        x: x,
+        spdX: spdX,
+        y: y,
+        spdY: spdY,
+        id: id,
+        width: width,
+        height: height,
+        color: 'red',
+        };
+    enemyList[id] = enemy3;
+}
+
+document.onmousemove = function(mouse){
+    var mouseX = mouse.clientX;
+    var mouseY = mouse.clientY;
+
+    player.x = mouseX;
+    player.y = mouseY;
+}
+
+
 
 function updateEntity(some){
+    updateEntityPosition(some);
+    drawEntity(some);
+}
+
+function updateEntityPosition(some){
     some.x += some.spdX;
     some.y += some.spdY;
-    ctx.fillText(some.name,some.x,some.y);
-
+    
     if (some.x < 0 || some.x > WIDTH) {
         some.spdX = -some.spdX;
     }
@@ -46,12 +91,51 @@ function updateEntity(some){
     if (some.y < 0 || some.y > HEIGHT) {
         some.spdY = -some.spdY;
     }
-
 }
+
+function testCollisionRectRect(rect1, rect2){
+    return rect1.x <= rect2.x + rect2.width
+        && rect2.x <= rect1.x + rect1.width
+        && rect1.y <= rect2.y + rect2.height
+        && rect2.y <= rect1.y + rect1.height;
+}
+
+function drawEntity(some) {
+    ctx.save();
+    ctx.fillStyle = some.color;
+    ctx.fillRect(some.x-some.width/2,some.y-some.height/2,some.width,some.height);
+    ctx.restore();
+} 
+
 
 function update() {
     ctx.clearRect(0,0,WIDTH,HEIGHT);
-    updateEntity(player);
-    updateEntity(enemy);
+    //updateEntity(player);
+    
+    for(var key in enemyList) {
+        updateEntity(enemyList[key]);
+
+        var isColliding = testCollisionEntity(player,enemyList[key]);
+        if(isColliding){
+            player.hp = player.hp - 1; //при контакте с врагом хп уменьшается на 1
+
+            if(player.hp <= 0){ //если хп равно или меньше 0
+                var timeSurvived = Date.now() - timeWhenGameStarted;
+                console.log("You died! You survived for " + timeSurvived + " ms");
+                timeWhenGameStarted = Date.now();
+                player.hp = 10;
+            }
+        }
+    }
+
+    drawEntity(player);
+    ctx.fillText(player.hp + " Hp",0,30);
 }
+
+Enemy('E1',150,350,10,15,30,30);
+Enemy('E2',100,300,15,10,20,20);
+Enemy('E3',250,150,10,-8,40,10);
+
+setInterval(update,50);
+
 </script>
