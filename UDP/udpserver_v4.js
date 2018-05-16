@@ -3,9 +3,9 @@
 
 //создание сервера
 const dgram = require('dgram');
-const err = require('mod_error');
 const server = dgram.createSocket('udp4');
 
+var log = require('./mod_error.js');
 
 //для нарезки
 var dot = ':';
@@ -33,7 +33,11 @@ function splitString(stringToSplit, separator) {
     console.log('Разделитель: "' + separator + '"');
     console.log('Всего  ' + arrayOfStrings.length + ' параметра: ' + arrayOfStrings.join(' / '));
     
-    
+    //console.log (stringToSplit.trim().length);
+    //if (stringToSplit.trim().length <= 0){
+    //    console.log(log.err);
+    //}
+
     //создание объекта юзера
     var usr = {
         id: arrayOfStrings[0],
@@ -50,9 +54,11 @@ var splitmsg = msg.toString('ascii'); //перевод сообщения в с�
 //объект для вывода юзеру
 var usr = splitString(splitmsg, dot);
 var pushmap;
-    
+   
+
+
 //условие вывода на экран от команды
-if (usr.com == com.push) {
+if (usr.id != undefined && usr.com != undefined && usr.com == com.push) {
 
     //свойство для мапы чтоб в значении было 2 объекта
     pushmap = {
@@ -64,7 +70,7 @@ if (usr.com == com.push) {
 
     console.log('\nИмя пользователя ' + usr.id + ' и его координаты ' + usr.x + ' ' + usr.y);
 
-} else if ((usr.com.trim()) == com.pop)  { //трим нужен для удаления всяких пробелов
+} else if (usr.id != undefined && usr.com != undefined && (usr.com.trim()) == com.pop)  { //трим нужен для удаления всяких пробелов
     
     var info = map.get(usr.id); //передача данных из мапы в объект инфо
 
@@ -74,7 +80,7 @@ if (usr.com == com.push) {
             server.send(`Ваши координаты X:${info.x} Y:${info.y}\n`, rinfo.port, rinfo.address)}
  
     
-} else if ((usr.com.trim()) == com.len) {
+} else if (usr.id != undefined && usr.com != undefined && (usr.com.trim()) == com.len) {
     
     //переменная для вычисления расстояния или типа того
     var length = undefined;
@@ -84,13 +90,14 @@ if (usr.com == com.push) {
     length = Math.sqrt(Math.pow((usr.x - info.x), 2) + Math.pow((usr.y - info.y), 2)); //формула расстояния по координатам из гугла
 
     server.send(`Расстояние: ${length}\n`, rinfo.port, rinfo.address);
+    
     console.log(length);
 
 } else {
 
-    server.send('Неверная команда\n', rinfo.port, rinfo.address);
+    server.send(log.err, rinfo.port, rinfo.address);
     //console.log('\nНеверная команда');
-    console.log(err.log);
+    console.log(log.err);
 }};
 
 //создание событий сервера

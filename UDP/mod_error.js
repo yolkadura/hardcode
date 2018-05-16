@@ -1,3 +1,5 @@
-var log = '\nНеверная команда';
+var err = '\nНеверная команда\n';
 
-exports = log;
+   
+
+exports.err = err;
