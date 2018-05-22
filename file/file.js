@@ -2,16 +2,21 @@ var fs = require('fs');     //подключение модуля файлово
 
 fs.readFile('test.txt', 'utf8', (err,data) => {         //чтение файла и вывод в консоль
     if (err) throw err;
-    console.log(data);
+    console.log('\n' + data);
 });
 
 fs.readFile('test.json', 'utf8', (err,data) => {         //чтение массива и вывод в консоль
     if (err) throw err;
         var arr = data;
         arr = JSON.parse(arr);
-    console.log(arr.name + ' ' + arr.age + ' ' + arr.race);
+    console.log('\n' + arr.name + ' ' + arr.age + ' ' + arr.race);
 });
 
 
-var log = fs.readFileSync('test.txt', 'utf8');
-console.log(log);
+var flsnc = fs.readFileSync('test.txt', 'utf8');
+console.log('\n' + flsnc);
+
+
+var rdstr = fs.createReadStream('test.txt', 'utf8', { start: 1, end: 10 });
+rdstr = rdstr.toString();
+console.log('\n' + rdstr);
