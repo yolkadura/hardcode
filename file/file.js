@@ -17,6 +17,17 @@ var flsnc = fs.readFileSync('test.txt', 'utf8');
 console.log('\n' + flsnc);
 
 
-var rdstr = fs.createReadStream('test.txt', 'utf8', { start: 1, end: 10 });
-rdstr = rdstr.toString();
-console.log('\n' + rdstr);
+
+
+//fs.ReadStream наследует от stream.Readable
+var stream = new fs.ReadStream('test.txt', 'utf8');
+ 
+stream.on('readable', function(){
+    var data = stream.read();
+    if(data != null)console.log(data.length);
+    console.log('\n' + data);
+});
+ 
+stream.on('end', function(){
+   console.log("THE END");
+});
