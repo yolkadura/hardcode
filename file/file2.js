@@ -3,7 +3,9 @@
 var fs = require('fs');     //подключение модуля файловой системы
 
 function WordCount(str) { 
-    return str.split(" ").length;
+    //return str.split(" ").length;
+    var len = str.split(" ").length + str.split("\n").length - 1;
+    return len;
 };
 
 
