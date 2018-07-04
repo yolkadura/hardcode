@@ -24,7 +24,7 @@ var stream = new fs.ReadStream('test.txt', 'utf8');
  
 stream.on('readable', function(){
     var data = stream.read();
-    if(data != null)console.log(data.length);
+    if(data != null)console.log('\n' + data.length);
     console.log('\n' + data);
 });
  
