@@ -1,0 +1,53 @@
+//создание базы
+//create database имя базы;
+create database database;
+
+//создание таблицы
+//create table имя таблицы (строка1 тип, строка2 тип);
+create table citys (id INT, name VARCHAR(225));
+
+//удаление таблицы
+//drop table имя таблицы;
+drop table citys;
+
+//добавление данных в таблицу
+//insert into имя таблицы (строка1, строка2) values(строка1, строка2);
+insert into citys (id, name) values (1,'Novoros');
+
+//выборка данных
+
+SELECT * FROM table_name; //вернет все записи таблицы
+SELECT * FROM table_name WHERE field_1 = 2; //вернет все записи таблицы, где поле field_1 = 2
+SELECT * FROM table_name WHERE field_1 != 2; //вернет все записи таблицы, кроме тех, у которых поле field_1 = 2
+SELECT * FROM table_name WHERE field_1 > 2; //вернет все записи таблицы, где поле field_1 больше 2
+SELECT * FROM table_name limit 2; //вернет только 2 первые подходящие записи
+
+UPDATE table_name SET field_1 = 'new_value'; //изменит значение поля field_1 у всех записей
+UPDATE table_name SET field_1 = 'new_value' WHERE field_2 = 'other_value'; //измеeнит значение поля field_1 у записей, в которых поле field_2 равно other_value 
+
+DELETE FROM table_name; //удалит все записи из таблицы
+DELETE FROM table_name WHERE field_1 = 'old_value'; //удалит из таблицы запись, у которой поле field_1 = 'old_value'
+
+SELECT * FROM table_name ORDER BY field_1 ASC; //выведет все записи из таблицы table_name отсортировав по полю field_1 в возрастающем порядке
+SELECT * FROM table_name ORDER BY field_1 DESC; //выведет все записи из таблицы table_name отсортировав по полю field_1 в убывающем порядке
+
+
+
+
+SELECT COUNT(REQUEST_ID) FROM database WHERE QUARTER(EVENTTIME)=2;
+
+МИ - массовый инцедент значит, что - CAUSE VARCHAR2(1000)	причина -  должна содержать как минимум 2 повторяющиеся записи
+т.е. на не нужен COUNT от (REQUEST_ID) а COUNT от SELECT 
+
+
+SELECT COUNT(REQUEST_ID) 
+FROM (
+    SELECT REQUEST_ID, EVENTTIME 
+    FROM database					
+    WHERE CAUSE IN (
+        SELECT CAUSE FROM database 
+        GROUP BY CAUSE 
+        HAVING COUNT(*) > 1)	
+        ) 
+WHERE QUARTER(EVENTTIME)=2;
+				
