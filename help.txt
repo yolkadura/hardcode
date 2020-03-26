@@ -1,4 +1,8 @@
 git clone https
  git add *
  git commit -m "text"
- git push original master
+ git push origin master
+
+ go mod init bot - инициализация го проекта
+
+ git push origin +master - принудительная замена файлов в репе
